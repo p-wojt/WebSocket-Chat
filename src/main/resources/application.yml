@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    password: "patryk"
+    username: "root"
+    driver-class-name:
+    url: "jdbc:mysql://localhost:3306/websocket-chat"
+  jpa:
+    hibernate:
+      ddl-auto: update

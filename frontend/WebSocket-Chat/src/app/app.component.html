@@ -1,0 +1,60 @@
+<ng-adblock-detect (adblockDetected)="adblockDetected($event)"></ng-adblock-detect>
+
+<ng-container *ngIf="adblock; then adblockON else adblockOFF"></ng-container>
+
+<ng-template #adblockOFF>
+<div id="connectPanel" *ngIf="!connected">
+  <form>
+    <label for="nickName">Your nickname: </label>
+    <input type="text" required [(ngModel)]="nickname" maxlength="512" id="nickName" name="nickName"
+           class="form-control"/>
+    <label for="colorPicker">Select your color: </label>
+    <select class="form-select" [(ngModel)]="pickerFontColor" [style.color]="pickerFontColor" id="colorPicker"
+            name="colorPicker">
+      <option *ngFor="let color of allowedColors" [ngValue]="color" [style.color]="color">{{color}}</option>
+    </select>
+    <button id="connect" class="btn btn-success" type="button" (click)="connect()">
+      Connect
+    </button>
+  </form>
+</div>
+
+<div id="chatBox" *ngIf="connected">
+  <form id="disconnectSection">
+    <span>Your nickname:</span> <span [style.color]="pickerFontColor" id="name">{{nickname}}</span>
+    <button id="disconnect" class="btn btn-danger" type="button" (click)="disconnect()">
+      Disconnect
+    </button>
+  </form>
+  <form id="chat">
+    <p *ngFor="let message of messages">
+      <ng-container *ngIf="message.from == 'Server'; then server else user"></ng-container>
+      <ng-template #user>
+        {{message.time}} <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
+      </ng-template>
+      <ng-template #server>
+        {{message.time}} <span [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
+      </ng-template>
+    </p>
+  </form>
+  <form id="sendSection">
+    <div class="row">
+      <div class="col-sm-10">
+        <input type="text" id="messageInput" maxlength="512" [(ngModel)]="message" name="message"
+               class="form-control"/>
+      </div>
+      <div class="col-sm-2">
+        <button id="send" class="btn btn-dark" type="button" [disabled]="!allowSendMessages"
+                (click)="sendMessage()">
+          Send {{timeToSend != 0 ? timeToSend : ''}}</button>
+      </div>
+    </div>
+  </form>
+</div>
+</ng-template>
+
+<ng-template #adblockON>
+  <h1>Turn off your adblock first and then refresh the page!</h1>
+</ng-template>
+
+
