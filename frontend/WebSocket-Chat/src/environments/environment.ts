@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:8080',
   getAllActiveUsers: '/app/activeusers/getAll',
-  saveActiveUser: 'app/activeusers/save',
+  saveActiveUser: '/app/activeusers/save',
+  deleteActiveUser: '/app/activeusers/deleteByNickname'
 };
 
 /*

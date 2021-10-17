@@ -15,7 +15,7 @@ public class ActiveUserController {
 
     private final ActiveUserService service;
 
-    @PostMapping(path = "/app/activeusers/save")
+    @PostMapping(path = "/app/activeusers/save", consumes="application/json")
     public void saveUser(@RequestBody ActiveUserReq activeUser){
         this.service.saveActiveUser(activeUser);
     }

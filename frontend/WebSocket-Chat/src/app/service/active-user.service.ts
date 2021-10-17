@@ -12,16 +12,16 @@ export class ActiveUserService {
 
   saveActiveUser(activeUser: ActiveUser){
     const body = JSON.stringify(activeUser);
-    this.http.post(environment.apiUrl + environment.saveActiveUser, body);
+    return this.http.post(environment.apiUrl + environment.saveActiveUser, body, {headers: {
+        'Content-Type': 'application/json'
+      }});
   }
 
   getAllActiveUsers(): any{
-    this.http.get(environment.apiUrl + environment.getAllActiveUsers).subscribe((response: any) => {
-      return response;
-    });
+    return this.http.get<Array<ActiveUser>>(environment.apiUrl + environment.getAllActiveUsers);
   }
 
   deleteUserByName(nickname: string): any{
-    this.http.delete(environment.apiUrl + environment.getAllActiveUsers + `/${nickname}`);
+    this.http.delete(environment.apiUrl + environment.deleteActiveUser + `/${nickname}`).subscribe();
   }
 }

@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import * as SockJS from "sockjs-client";
-import {CompatClient, Stomp} from "@stomp/stompjs";
+import {Client, CompatClient, Stomp, StompConfig} from "@stomp/stompjs";
 import {OutputMessage} from "./model/OutputMessage";
 import {MessageService} from "./service/message.service";
 import {ActiveUser} from "./model/ActiveUser";
 import {ActiveUserService} from "./service/active-user.service";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {restrictedNames} from "./validators/restricted-names";
 
 @Component({
   selector: 'app-root',
@@ -13,62 +15,89 @@ import {ActiveUserService} from "./service/active-user.service";
 })
 export class AppComponent implements OnInit {
 
+  private REFRESH_USER_LIST = 15000; //in milliseconds
+  private stompClient: CompatClient | undefined;
+  private ipAddress: string | undefined;
+  private refreshInterval: any;
+  private client: Client | undefined;
+
+  connectForm: FormGroup | undefined;
+  allowedColors: string[] = ['Black', 'Aqua', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange', 'Pink'];
+  activeUsers: Array<ActiveUser> = [];
+  messages: OutputMessage[] = [];
+  nickname: string = "";
+  message: string = '';
+  pickerFontColor: string = "black"
+  timeToSend: number = 0;
+  adblock = false;
+  connected = false;
+  allowSendMessages: boolean = true;
+  theSameNickname: boolean = false;
 
   constructor(private messageService: MessageService, private activeUserService: ActiveUserService) {
   }
 
   ngOnInit(): void {
+    this.connectForm = new FormGroup({
+      nickname: new FormControl(this.nickname, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern("^[a-zA-Z0-9]*$"),
+        restrictedNames()
+      ])
+    })
+
     let _this = this;
     window.onbeforeunload = function () {
       _this.disconnect();
     }
   }
 
-  private stompClient: CompatClient | undefined;
-  private ipAddress: string | undefined;
+  async connect() {
+    if (this.nickname.length >= 3 && this.nickname.match("^[a-zA-Z0-9]*$")) {
+      //this.client = new Client(new StompConfig());
+      const socket = new SockJS('http://localhost:8080/chat');
+      this.stompClient = Stomp.over(socket);
 
-  allowedColors: string[] = ['Black', 'Aqua', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange', 'Pink'];
-  activeUsers: ActiveUser[] = [];
-  nickname: string = "";
-  message: string = '';
-  pickerFontColor: string = "black"
-  timeToSend: number = 0;
-  allowSendMessages: boolean = true;
-  adblock = false;
-  connected = false; //<---- TODO: Change to false
-  messages: OutputMessage[] = [];
+/*      this.client.webSocketFactory = function () {
+        return socket;
+      };*/
 
-  connect() {
-    if (this.nickname.length > 0) {
+      await this.getActiveUsers();
 
-      //if (this.activeUsers != undefined && !this.activeUsers.find(e => e.name == this.nickName)) {
-        const socket = new SockJS('http://localhost:8080/chat');
-        this.stompClient = Stomp.over(socket);
+      this.theSameNickname = false;
+      for (let i = 0; i < this.activeUsers.length; i++) {
+        if (this.activeUsers[i].nickname == this.nickname) {
+          this.theSameNickname = true;
+          break;
+        }
+      }
 
-        let _this = this;
+      let _this = this;
+      if (!this.theSameNickname) {
         this.stompClient.connect({}, function () {
+          _this.saveConnectingUser({
+            nickname: _this.nickname,
+            color: _this.pickerFontColor
+          });
+
           _this.setConnected(true);
 
           _this.stompClient?.subscribe('/topic/messages', function (msg) {
             _this.showMessage(JSON.parse(msg.body))
           })
 
+          _this.getIpAddress();
+
           _this.broadcastMessage(_this.nickname + ' has joined to the channel!');
+
+          _this.refreshInterval = setInterval(() => {
+            _this.activeUserService.getAllActiveUsers().subscribe((response: Array<ActiveUser>) => {
+              _this.activeUsers = response
+            });
+          }, _this.REFRESH_USER_LIST);
         })
-
-        this.getIpAddress();
-
-      this.activeUserService.saveActiveUser({
-        nickname: this.nickname,
-        color: this.pickerFontColor
-      });
-
-      if(this.activeUserService.getAllActiveUsers() != undefined) {
-        this.activeUserService.getAllActiveUsers().subscribe((response: any) => {
-          this.activeUsers = response;
-        });
       }
-      //}
     }
   }
 
@@ -89,7 +118,6 @@ export class AppComponent implements OnInit {
 
 
     this.setConnected(false);
-    this.activeUserService.deleteUserByName(this.nickname);
     this.nickname = "";
   }
 
@@ -117,7 +145,6 @@ export class AppComponent implements OnInit {
           clearInterval(noSpamInterval);
         }
       }, 1000)
-
     }
   }
 
@@ -145,5 +172,26 @@ export class AppComponent implements OnInit {
 
   adblockDetected(adblockDetected: boolean) {
     this.adblock = adblockDetected;
+  }
+
+  get nicknameValid() {
+    return this.connectForm?.get('nickname');
+  }
+
+  async getActiveUsers() {
+    return this.activeUserService.getAllActiveUsers().toPromise().then(
+      (res: any) => {
+        this.activeUsers = res.map((res: any) => {
+          return {
+            nickname: res.nickname,
+            color: res.color
+          }
+        });
+      }
+    );
+  }
+
+  saveConnectingUser(user: ActiveUser) {
+    this.activeUserService.saveActiveUser(user).subscribe();
   }
 }

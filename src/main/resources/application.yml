@@ -6,4 +6,4 @@ spring:
     url: "jdbc:mysql://localhost:3306/websocket-chat"
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop

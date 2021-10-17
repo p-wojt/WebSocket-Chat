@@ -1,5 +1,6 @@
 package com.example.websocketchat.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.sql.Date;
 @Entity
 @Table(name = "Messages")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class MessageEntity {
     @GeneratedValue

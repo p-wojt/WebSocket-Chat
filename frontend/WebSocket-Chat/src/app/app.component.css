@@ -1,11 +1,12 @@
 #connectPanel{
-  width: 200px;
-  height: 400px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -200px;
-  margin-left: -100px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 300px;
+  max-height: 400px;
+  margin: auto;
 }
 
 #connectPanel button{
@@ -14,17 +15,26 @@
 }
 
 #chatBox{
+  color: white;
   width: 70%;
-  height: 50%;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -25%;
-  margin-left: -35%;
+  height: 70%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: rgba(97, 0, 191, 1);
+  border: black 2px solid;
 }
 
 #chatBox p{
   margin-bottom: -5px;
+  overflow-wrap: break-word;
+  white-space: initial;
+  word-break: break-all;
 }
 
 #disconnectSection{
@@ -32,28 +42,52 @@
   padding-bottom: 5px;
 }
 
+#disconnectSection #name{
+  margin-left: 5px;
+}
+
+#disconnectSection button{
+  width: 17%;
+}
+
 #disconnectSection span{
   float: left;
-  margin-top: 10px;
 }
 
 #chat{
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 600px;
-  border: black solid 1px;
+  height: 90%;
+  width: 83%;
+  float: left;
+  padding-right: 2px;
 }
 
-#sendSection{
+#activeUsers{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 90%;
+  width: 17%;
+  text-align: center;
   margin-top: 5px;
 }
 
+#sendSection {
+  margin-top: 5px;
+}
+
+.row{
+  margin-left: 8px;
+}
+
 #sendSection button{
-  width: 100%;
+  width: 17%;
 }
 
-#disconnectSection #name{
-  margin-left: 4px;
+#sendSection input{
+  width: 81%;
 }
 
-
+*::-webkit-scrollbar {
+  width: 0;
+}

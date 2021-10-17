@@ -22,7 +22,7 @@ public class ActiveUserService {
         return this.repository.findAll();
     }
 
-    public void deleteUserByNickname(String name) {
-        this.repository.deleteUserByNickname(name);
+    public void deleteUserByNickname(String nickname) {
+        this.repository.deleteUserByNickname(nickname);
     }
 }
