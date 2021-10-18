@@ -3,7 +3,6 @@ package com.example.websocketchat.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +14,6 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
-@Setter
 public class ActiveUserEntity {
     @Id
     @GeneratedValue
