@@ -4,6 +4,7 @@ import com.example.websocketchat.dto.ActiveUserReq;
 import com.example.websocketchat.entity.ActiveUserEntity;
 import com.example.websocketchat.service.ActiveUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class ActiveUserController {
     private final ActiveUserService service;
 
     @PostMapping(path = "/app/activeusers/save", consumes="application/json")
+    @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody ActiveUserReq activeUser){
         this.service.saveActiveUser(activeUser);
     }
