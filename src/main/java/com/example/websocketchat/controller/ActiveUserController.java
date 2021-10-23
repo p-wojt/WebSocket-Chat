@@ -27,6 +27,11 @@ public class ActiveUserController {
         return ResponseEntity.ok(this.service.getAllActiveUsers());
     }
 
+    @GetMapping(path = "/app/activeusers/theSameNickname/{name}")
+    public boolean isTheSameNickname(@PathVariable("name") String name){
+        return service.isTheSameNickname(name);
+    }
+
     @DeleteMapping(path = "/app/activeusers/deleteByNickname/{name}")
     public void deleteUserByNickname(@PathVariable("name") String name){
         this.service.deleteUserByNickname(name);

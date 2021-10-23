@@ -14,4 +14,8 @@ public class MessageService {
     public void save(final MessageEntity messageEntity){
         this.repository.save(messageEntity);
     }
+
+    public void deleteLastDayMessages(){
+        this.repository.deleteAll(this.repository.getLastDayMessages());
+    }
 }

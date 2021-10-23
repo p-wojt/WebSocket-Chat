@@ -15,11 +15,10 @@ import {restrictedNames} from "./validators/restricted-names";
 })
 export class AppComponent implements OnInit {
 
-  private REFRESH_USER_LIST = 15000; //in milliseconds
+  private REFRESH_USER_LIST = 15000;
   private stompClient: CompatClient | undefined;
   private ipAddress: string | undefined;
   private refreshInterval: any;
-  private client: Client | undefined;
 
   connectForm: FormGroup | undefined;
   allowedColors: string[] = ['Black', 'Aqua', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange', 'Pink'];
@@ -29,6 +28,7 @@ export class AppComponent implements OnInit {
   message: string = '';
   pickerFontColor: string = "black"
   timeToSend: number = 0;
+  online: number = 0;
   adblock = false;
   connected = false;
   allowSendMessages: boolean = true;
@@ -54,46 +54,36 @@ export class AppComponent implements OnInit {
   }
 
   async connect() {
+    this.nickname = this.connectForm?.value.nickname;
     if (this.nickname.length >= 3 && this.nickname.match("^[a-zA-Z0-9]*$")) {
-      //this.client = new Client(new StompConfig());
       const socket = new SockJS('http://localhost:8080/chat');
       this.stompClient = Stomp.over(socket);
 
-/*      this.client.webSocketFactory = function () {
-        return socket;
-      };*/
-
-      await this.getActiveUsers();
-
-      this.theSameNickname = false;
-      for (let i = 0; i < this.activeUsers.length; i++) {
-        if (this.activeUsers[i].nickname == this.nickname) {
-          this.theSameNickname = true;
-          break;
-        }
-      }
-
-      let _this = this;
+      await this.isTheSameNickname(this.nickname);
       if (!this.theSameNickname) {
-        this.stompClient.connect({}, function () {
-          _this.saveConnectingUser({
+
+        let _this = this;
+        this.stompClient.connect({}, async function () {
+
+          await _this.saveConnectingUser({
             nickname: _this.nickname,
             color: _this.pickerFontColor
           });
 
+          await _this.getActiveUsers();
           _this.setConnected(true);
 
           _this.stompClient?.subscribe('/topic/messages', function (msg) {
             _this.showMessage(JSON.parse(msg.body))
-          })
+          });
 
           _this.getIpAddress();
-
           _this.broadcastMessage(_this.nickname + ' has joined to the channel!');
 
           _this.refreshInterval = setInterval(() => {
             _this.activeUserService.getAllActiveUsers().subscribe((response: Array<ActiveUser>) => {
               _this.activeUsers = response
+              _this.online = response.length;
             });
           }, _this.REFRESH_USER_LIST);
         })
@@ -105,7 +95,6 @@ export class AppComponent implements OnInit {
     if (!connected) {
       this.messages = [];
     }
-
     this.connected = connected;
   }
 
@@ -115,14 +104,12 @@ export class AppComponent implements OnInit {
       this.activeUserService.deleteUserByName(this.nickname);
       this.stompClient.disconnect();
     }
-
-
     this.setConnected(false);
     this.nickname = "";
   }
 
   sendMessage() {
-    if (this.message != '') {
+    if (this.allowSendMessages && this.message != '') {
       this.allowSendMessages = false;
       this.stompClient?.send(
         '/app/chat',
@@ -137,7 +124,6 @@ export class AppComponent implements OnInit {
       this.message = '';
       this.timeToSend = 3;
 
-
       let noSpamInterval = setInterval(() => {
         this.timeToSend! -= 1;
         if (this.timeToSend! <= 0) {
@@ -148,7 +134,15 @@ export class AppComponent implements OnInit {
     }
   }
 
-  broadcastMessage(message: string) {
+  adblockDetected(adblockDetected: boolean) {
+    this.adblock = adblockDetected;
+  }
+
+  get nicknameValid() {
+    return this.connectForm?.get('nickname');
+  }
+
+  private broadcastMessage(message: string) {
     this.stompClient?.send(
       '/app/chat',
       {},
@@ -160,7 +154,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  showMessage(message: OutputMessage) {
+  private showMessage(message: OutputMessage) {
     this.messages.push(message);
   }
 
@@ -170,16 +164,8 @@ export class AppComponent implements OnInit {
     })
   }
 
-  adblockDetected(adblockDetected: boolean) {
-    this.adblock = adblockDetected;
-  }
-
-  get nicknameValid() {
-    return this.connectForm?.get('nickname');
-  }
-
-  async getActiveUsers() {
-    return this.activeUserService.getAllActiveUsers().toPromise().then(
+  private async getActiveUsers() {
+    await this.activeUserService.getAllActiveUsers().toPromise().then(
       (res: any) => {
         this.activeUsers = res.map((res: any) => {
           return {
@@ -187,11 +173,24 @@ export class AppComponent implements OnInit {
             color: res.color
           }
         });
+        this.online = this.activeUsers.length;
       }
     );
   }
 
-  saveConnectingUser(user: ActiveUser) {
-    this.activeUserService.saveActiveUser(user).subscribe();
+  private async saveConnectingUser(user: ActiveUser) {
+    await this.activeUserService.saveActiveUser(user).toPromise().then(
+      (res: any) => {
+        this.activeUsers.push(res);
+      }
+    )
+  }
+
+  private async isTheSameNickname(nickname: string){
+    await this.activeUserService.isTheSameNickname(nickname).toPromise().then(
+      (res: any) => {
+        this.theSameNickname = res;
+      }
+    )
   }
 }

@@ -28,9 +28,13 @@
             ],
             "styles": [
               "src/styles.css",
-              "C:\\Users\\patry\\OneDrive\\Pulpit\\WebSocket-Chat\\frontend\\WebSocket-Chat\\node_modules\\bootstrap\\dist\\css\\bootstrap.css"
+              "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "rxjs-compat",
+              "lodash"
+            ]
           },
           "configurations": {
             "production": {

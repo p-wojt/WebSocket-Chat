@@ -1,18 +1,20 @@
 <ng-adblock-detect (adblockDetected)="adblockDetected($event)"></ng-adblock-detect>
 
-<ng-container *ngIf="adblock; then adblockON else adblockOFF"></ng-container>
+<ng-template *ngIf="adblock; then adblockON else adblockOFF"></ng-template>
 
 <ng-template #adblockOFF>
-  <div id="connectPanel" *ngIf="!connected">
+  <div class="connectPanel" *ngIf="!connected">
     <form>
       <div *ngIf="theSameNickname" class="alert alert-danger">
         This nickname is already taken!
       </div>
       <label for="nickname">Your nickname: </label>
       <div [formGroup]="connectForm!">
-      <input class="form-control" type="text" required maxlength="16" id="nickname" name="nickname" formControlName="nickname" [(ngModel)]="nickname"/>
+        <input class="form-control" type="text" required maxlength="16" id="nickname" name="nickname"
+               formControlName="nickname"/>
       </div>
-      <div *ngIf="nicknameValid!.invalid && (nicknameValid!.dirty || nicknameValid!.touched)" class="alert alert-danger">
+      <div *ngIf="nicknameValid!.invalid && (nicknameValid!.dirty || nicknameValid!.touched)"
+           class="alert alert-danger">
         <div *ngIf="nicknameValid!.errors?.required">
           Nickname is required!
         </div>
@@ -31,49 +33,58 @@
               name="colorPicker">
         <option *ngFor="let color of allowedColors" [ngValue]="color" [style.color]="color">{{color}}</option>
       </select>
-      <button id="connect" class="btn btn-success" type="button" (click)="connect()" [disabled]="nicknameValid!.errors">
+      <button id="connect" class="btn btn-success" type="button" (window:keydown.enter)="connect()" (click)="connect()"
+              [disabled]="nicknameValid!.errors">
         Connect
       </button>
     </form>
   </div>
 
-  <div id="chatBox" *ngIf="connected">
-    <div id="disconnectSection">
-      <span><b>Your nickname:</b></span> <span [style.color]="pickerFontColor" id="name">{{nickname}}</span>
-      <button id="disconnect" class="btn btn-danger" type="button" (click)="disconnect()">
-        Disconnect
-      </button>
-    </div>
-
-    <div id="chat">
-      <p *ngFor="let message of messages">
-        <ng-container *ngIf="message.from == 'Server'; then server else user"></ng-container>
-        <ng-template #user>
-          {{message.time}} <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
-        </ng-template>
-        <ng-template #server>
-          {{message.time}} <span [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
-        </ng-template>
-      </p>
-    </div>
-
-    <div id="activeUsers">
-      <b>Online</b>
-        <p *ngFor="let activeUser of activeUsers" [style.color]="activeUser.color">
-          {{activeUser.nickname}}</p>
-    </div>
-
-    <form id="sendSection">
-      <div class="row">
-          <input type="text" id="messageInput" maxlength="255" [(ngModel)]="message" name="message"
-                 class="form-control"/>
-
-          <button id="send" class="btn btn-dark" type="button" [disabled]="!allowSendMessages"
+  <div class="mainView" *ngIf="connected">
+    <div class="container">
+      <div class="disconnectSection">
+        <button type="button" (click)="disconnect()">Disconnect</button>
+      </div>
+      <div class="onlineSection">
+        <div class="onlineText">
+          <span>Online: {{online}}</span>
+        </div>
+        <div class="onlineList">
+          <ul>
+            <li *ngFor="let user of activeUsers" [style.color]="user.color">{{user.nickname}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chatBox">
+        <div class="userNickname" [style.color]="pickerFontColor">
+          <span>{{nickname}}</span>
+        </div>
+        <div class="messagesBox">
+          <ul class="messagesList">
+            <li *ngFor="let message of messages">
+              <ng-container *ngIf="message.from == 'Server'; then server else user"></ng-container>
+              <ng-template #user>
+                [{{message.time}}] <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
+              </ng-template>
+              <ng-template #server>
+                [{{message.time}}] <span
+                [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sendSection">
+        <div class="messageInput">
+          <input type="text" maxlength="255" [(ngModel)]="message" name="message"/>
+        </div>
+        <div class="sendButton">
+          <button class="send" type="button" [disabled]="!allowSendMessages" (window:keydown.enter)="sendMessage()"
                   (click)="sendMessage()">
             Send {{timeToSend != 0 ? timeToSend : ''}}</button>
+        </div>
       </div>
-    </form>
-
+    </div>
   </div>
 </ng-template>
 

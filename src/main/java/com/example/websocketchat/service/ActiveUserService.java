@@ -25,4 +25,8 @@ public class ActiveUserService {
     public void deleteUserByNickname(String nickname) {
         this.repository.deleteUserByNickname(nickname);
     }
+
+    public boolean isTheSameNickname(String name) {
+        return repository.findByNickname(name) != null;
+    }
 }
