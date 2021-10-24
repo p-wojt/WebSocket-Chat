@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  frontend:
+    build:  ./client
+    ports:
+      - "4200:4200"
+    depends_on:
+      - websocket-backend
+
+  database:
+    container_name: 'mysql'
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_PASSWORD: patryk
+      MYSQL_ROOT_PASSWORD: patryk
+      MYSQL_DATABASE: websocket-chat
+    restart: always
