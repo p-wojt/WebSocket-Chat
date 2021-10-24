@@ -1,9 +1,9 @@
 spring:
   datasource:
-    password: "patryk"
     username: "root"
-    driver-class-name:
-    url: "jdbc:mysql://localhost:3306/websocket-chat"
+    password: "patryk"
+    url: "jdbc:mysql://database:3306/websocket-chat"
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop

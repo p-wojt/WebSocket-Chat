@@ -117,6 +117,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>websocket-chat</finalName>
     </build>
 
 </project>
