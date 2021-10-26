@@ -6,22 +6,21 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - database
-
+      - mysql_db
+      
   frontend:
-    build:  ./client
+    build: ./client
     ports:
       - "4200:4200"
     depends_on:
-      - websocket-backend
+      - backend
 
-  database:
-    container_name: 'mysql'
+  mysql_db:
     image: mysql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_PASSWORD: patryk
-      MYSQL_ROOT_PASSWORD: patryk
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
       MYSQL_DATABASE: websocket-chat
     restart: always
