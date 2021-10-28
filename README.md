@@ -6,6 +6,8 @@
 Application is an online chat created for education purposes. An app is based on WebSocket protocol to have a
 bidirectional, full-duplex connection between client and server by TCP connection. To send messages I used STOMP protocol.
 
+
+
 ##Features
 ***
 There are several features:
@@ -14,8 +16,11 @@ There are several features:
     * nickname can contain only letters, digits and underscore
     * max length of nickname is 16 characters
     * user cannot enter if his nickname is already taken by other person
+    * max length of text message is 255 characters
+* user interface
     * the default nickname color is black but user can change it by picking from dropbox
-* user
+    * user can send messages once every 3 seconds
+    * list of online users is updating every 15 seconds
 
 ##Prerequisites
 ***
@@ -49,8 +54,9 @@ spring:
   datasource:
     username: "user"
     password: "password"
-    url: "jdbc:mysql://localhost:3306/websocket-chat"
+    url: "jdbc:mysql://mysql_db:3306/websocket-chat?allowPublicKeyRetrieval=true&useSSL=false"
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -60,9 +66,10 @@ Database
 * Create database schema ex. "websocket-chat"
 5. Make sure that you have installed all dependencies: `mvn clean install package`
 6. Now run package `java -jar .\websocket-chat.jar`
-###Docker
-1. Enter main directory
-2. Run command `docker-compse up` to create & ON
+###Docker (faster way)
+1. Make sure that your docker app is running
+2. Enter main directory
+3. Run command `docker-compse up` to create & ON images
 
 
 <br><b>Next step is just open your browser and go `http://localhost:4200`</b>
@@ -70,13 +77,15 @@ Database
 ##API Documentation
 ***
 
-For API documentation I used Swagger-UI. There aren't many to read but I sure that It can be helpful for somebody :)
+For API documentation I used Swagger-UI. Not much to read but I sure that someone might need it :)
 ###Swagger-UI / Springfox
 
 
 ![Swagger-UI](pictures/Swagger-UI.png)
 
 ## Database diagram
+Simple database diagram
+![Database diagram](pictures/database_diagram.png)
 
 ##Licence
 
