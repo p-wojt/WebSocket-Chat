@@ -1,3 +1,4 @@
+
 .connectPanel {
   position: absolute;
   top: 0;
@@ -8,7 +9,6 @@
   max-height: 400px;
   margin: auto;
 }
-
 .connectPanel button {
   float: right;
   margin-top: 3%;
@@ -21,7 +21,9 @@
   bottom: 0;
   overflow-y: scroll;
   overflow-x: hidden;
-  background-color: #3F65FF;
+  background-image: url("https://cdn.stocksnap.io/img-thumbs/960w/birds-flying_CJCMX14Z4F.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   font-size: 12px;
 }
 
@@ -47,6 +49,8 @@
 }
 
 .onlineText{
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
   min-height: 30px;
   width: inherit;
   background-color: #54C02E;
@@ -60,35 +64,36 @@
 }
 
 .onlineList{
-  width: inherit;
-  max-height: 165px;
-  background-color: rgba(196,196,196,0.2);
+  width: 100%;
+  height: 125px;
   overflow-y: scroll;
   overflow-x: hidden;
-}
-
-
-.chatBox{
-  margin-top: 15px;
+  z-index: -1;
 }
 
 .userNickname{
   width: 100%;
   min-height: 30px;
   text-align: center;
-  background-color: #C85D5D;
+  font-size: 16px;
+  background-color: #54C02E;
   display: flex;
   align-items: center;
+  border-radius: 20px 20px 0 0;
 }
 
 .userNickname span{
   width: inherit;
 }
 
+.chatBox{
+  background-color: rgba(0,0,0,0.75);
+  border-radius: 20px 20px 0 0;
+}
+
 .messagesBox{
   width: 100%;
-  height: 205px;
-  background-color: rgba(196,196,196,0.2);
+  height: 245px;
   color: #ECECEC;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -97,25 +102,29 @@
   word-break: break-all;
 }
 
-.sendSection{
-  margin-top: 15px;
+.messageInput{
+  display: flex;
+  margin: auto;
+  width: 100%;
+  padding: 1%;
 }
 
 .messageInput input{
-  width: 100%;
+  border: 1px solid #CCC;
+  border-radius: 5px;
 }
 
 .sendButton{
-  margin-top: 15px;
-  min-height: 30px;
+  min-height: 22px;
   text-align: center;
+  width: 10%;
 }
 
 .send{
   color: white;
-  width: 100%;
   border-radius: 15px;
   background-color: #2E2E2E;
+  width: 100%;
 }
 
 ul{
@@ -125,8 +134,4 @@ ul{
 
 ::-webkit-scrollbar {
   width: 0;
-}
-
-@media only screen and (min-width: 1366px){
-
 }

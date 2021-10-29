@@ -6,7 +6,9 @@
 Application is an online chat created for education purposes. An app is based on WebSocket protocol to have a
 bidirectional, full-duplex connection between client and server by TCP connection. To send messages I used STOMP protocol.
 
-
+##Demo
+![connect](pictures/connect.png)
+![chat](pictures/chat.png)
 
 ##Features
 ***
@@ -86,6 +88,3 @@ For API documentation I used Swagger-UI. Not much to read but I sure that someon
 ## Database diagram
 Simple database diagram
 ![Database diagram](pictures/database_diagram.png)
-
-##Licence
-

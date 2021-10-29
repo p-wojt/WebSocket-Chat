@@ -45,43 +45,48 @@
       <div class="disconnectSection">
         <button type="button" (click)="disconnect()">Disconnect</button>
       </div>
-      <div class="onlineSection">
-        <div class="onlineText">
-          <span>Online: {{online}}</span>
-        </div>
-        <div class="onlineList">
-          <ul>
-            <li *ngFor="let user of activeUsers" [style.color]="user.color">{{user.nickname}}</li>
-          </ul>
-        </div>
-      </div>
       <div class="chatBox">
+        <div class="onlineSection">
+          <div class="onlineText">
+            <span>Online: {{online}}</span>
+          </div>
+          <div class="onlineList">
+            <ul>
+              <li *ngFor="let user of activeUsers" [style.color]="user.color">{{user.nickname}}</li>
+            </ul>
+          </div>
+        </div>
         <div class="userNickname" [style.color]="pickerFontColor">
           <span>{{nickname}}</span>
         </div>
-        <div class="messagesBox">
-          <ul class="messagesList">
-            <li *ngFor="let message of messages">
-              <ng-container *ngIf="message.from == 'Server'; then server else user"></ng-container>
-              <ng-template #user>
-                [{{message.time}}] <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
-              </ng-template>
-              <ng-template #server>
-                [{{message.time}}] <span
-                [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
-              </ng-template>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="sendSection">
-        <div class="messageInput">
-          <input type="text" maxlength="255" [(ngModel)]="message" name="message"/>
-        </div>
-        <div class="sendButton">
-          <button class="send" type="button" [disabled]="!allowSendMessages" (window:keydown.enter)="sendMessage()"
-                  (click)="sendMessage()">
-            Send {{timeToSend != 0 ? timeToSend : ''}}</button>
+        <div class="chat">
+          <div class="messagesBox">
+            <ul class="messagesList">
+              <li *ngFor="let message of messages">
+                <ng-template *ngIf="message.from == 'Server';then noServer else server"></ng-template>
+                <ng-template #noServer>
+                  [{{message.time}}] <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
+                </ng-template>
+                <ng-template #server>
+                  [{{message.time}}] <span
+                  [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
+                </ng-template>
+              </li>
+            </ul>
+          </div>
+          <div class="sendSection">
+            <div class="messageInput">
+              <input type="text" style="width: 80%" maxlength="255" [(ngModel)]="message" name="message"
+                     placeholder="Type some text..."/>
+
+              <div class="sendButton" style="width: 20%;">
+                <button class="send" type="button" style="width: 100%;" [disabled]="!allowSendMessages"
+                        (window:keydown.enter)="sendMessage()"
+                        (click)="sendMessage()">
+                  Send {{timeToSend != 0 ? timeToSend : ''}}</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
