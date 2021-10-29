@@ -43,10 +43,12 @@ There are several features:
 
 1. Make sure that you follow up all prerequisites
 2. Clone repository `https://github.com/p-wojt/websocket-chat.git`
+3. 
 #### Frontend
 3. Open `client` directory and execute command here to start frontend application:
 `ng serve`
 ![ng-serve](pictures/ngserve.png)
+
 #### Backend
 4. Open `server` directory and configure your database in `application.yml`
 <br>
@@ -70,7 +72,8 @@ Database
 * Create database schema ex. "websocket-chat"
 5. Make sure that you have installed all dependencies: `mvn clean install package`
 6. Now run package `java -jar .\websocket-chat.jar`
-###Docker (faster way)
+7. 
+### Docker (faster way)
 1. Make sure that your docker app is running
 2. Enter main directory
 3. Run command `docker-compse up` to create & ON images
@@ -89,4 +92,5 @@ For API documentation I used Swagger-UI. Not much to read but I sure that someon
 
 ## Database diagram
 Simple database diagram
+<br>
 ![Database diagram](pictures/database_diagram.png)
