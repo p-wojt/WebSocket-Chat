@@ -1,0 +1,98 @@
+<ng-adblock-detect (adblockDetected)="adblockDetected($event)"></ng-adblock-detect>
+
+<ng-template *ngIf="adblock; then adblockON else adblockOFF"></ng-template>
+
+<ng-template #adblockOFF>
+  <div class="connectPanel" *ngIf="!connected">
+    <form>
+      <div *ngIf="theSameNickname" class="alert alert-danger">
+        This nickname is already taken!
+      </div>
+      <label for="nickname">Your nickname: </label>
+      <div [formGroup]="connectForm!">
+        <input class="form-control" type="text" required maxlength="16" id="nickname" name="nickname"
+               formControlName="nickname"/>
+      </div>
+      <div *ngIf="nicknameValid!.invalid && (nicknameValid!.dirty || nicknameValid!.touched)"
+           class="alert alert-danger">
+        <div *ngIf="nicknameValid!.errors?.required">
+          Nickname is required!
+        </div>
+        <div *ngIf="nicknameValid!.errors?.minlength">
+          Nickname must be at least 3 characters long!
+        </div>
+        <div *ngIf="nicknameValid!.errors?.pattern">
+          You can use only letters and digits!
+        </div>
+        <div *ngIf="nicknameValid!.errors?.restrictedName">
+          This nickname is not allowed!
+        </div>
+      </div>
+      <label for="colorPicker">Select color: </label>
+      <select class="form-select" [(ngModel)]="pickerFontColor" [style.color]="pickerFontColor" id="colorPicker"
+              name="colorPicker">
+        <option *ngFor="let color of allowedColors" [ngValue]="color" [style.color]="color">{{color}}</option>
+      </select>
+      <button id="connect" class="btn btn-success" type="button" (window:keydown.enter)="connect()" (click)="connect()"
+              [disabled]="nicknameValid!.errors">
+        Connect
+      </button>
+    </form>
+  </div>
+
+  <div class="mainView" *ngIf="connected">
+    <div class="container">
+      <div class="disconnectSection">
+        <button type="button" (click)="disconnect()">Disconnect</button>
+      </div>
+      <div class="chatBox">
+        <div class="onlineSection">
+          <div class="onlineText">
+            <span>Online: {{online}}</span>
+          </div>
+          <div class="onlineList">
+            <ul>
+              <li *ngFor="let user of activeUsers" [style.color]="user.color">{{user.nickname}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="userNickname" [style.color]="pickerFontColor">
+          <span>{{nickname}}</span>
+        </div>
+        <div class="chat">
+          <div class="messagesBox">
+            <ul class="messagesList">
+              <li *ngFor="let message of messages">
+                <ng-template *ngIf="message.from == 'Server';then noServer else server"></ng-template>
+                <ng-template #noServer>
+                  [{{message.time}}] <span [style.color]="message.nickColor">{{message.from}}</span>» {{message.text}}
+                </ng-template>
+                <ng-template #server>
+                  [{{message.time}}] <span
+                  [style.color]="message.nickColor"><b>{{message.from}}</b></span>» {{message.text}}
+                </ng-template>
+              </li>
+            </ul>
+          </div>
+          <div class="sendSection">
+            <div class="messageInput">
+              <input type="text" style="width: 80%" maxlength="255" [(ngModel)]="message" name="message"
+                     placeholder="Type some text..."/>
+
+              <div class="sendButton" style="width: 20%;">
+                <button class="send" type="button" style="width: 100%;" [disabled]="!allowSendMessages"
+                        (window:keydown.enter)="sendMessage()"
+                        (click)="sendMessage()">
+                  Send {{timeToSend != 0 ? timeToSend : ''}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #adblockON>
+  <h1>Turn off your adblock first and then refresh the page!</h1>
+</ng-template>

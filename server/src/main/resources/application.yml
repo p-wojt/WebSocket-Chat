@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: "user"
+    password: "password"
+    url: "jdbc:mysql://mysql_db:3306/websocket-chat?allowPublicKeyRetrieval=true&useSSL=false"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
