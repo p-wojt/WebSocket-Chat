@@ -6,11 +6,11 @@
 Application is an online chat created for education purposes. An app is based on WebSocket protocol to have a
 bidirectional, full-duplex connection between client and server by TCP connection. To send messages I used STOMP protocol.
 
-##Demo
+## Demo
 ![connect](pictures/connect.png)
 ![chat](pictures/chat.png)
 
-##Features
+## Features
 ***
 There are several features:
 * form-validation
@@ -24,7 +24,7 @@ There are several features:
     * user can send messages once every 3 seconds
     * list of online users is updating every 15 seconds
 
-##Prerequisites
+## Prerequisites
 ***
 
 <ul>
@@ -37,17 +37,17 @@ There are several features:
 <li>Git (optional)</li>
 </ul>
 
-##Run app
+## Run app
 ***
-###Standard
+### Standard
 
 1. Make sure that you follow up all prerequisites
 2. Clone repository `https://github.com/p-wojt/websocket-chat.git`
-####Frontend
+#### Frontend
 3. Open `client` directory and execute command here to start frontend application:
 `ng serve`
 ![ng-serve](pictures/ngserve.png)
-####Backend
+#### Backend
 4. Open `server` directory and configure your database in `application.yml`
 <br>
 Standard configuration is prepared for `MySQL` and will look like this:
@@ -76,11 +76,11 @@ Database
 
 <br><b>Next step is just open your browser and go `http://localhost:4200`</b>
 
-##API Documentation
+## API Documentation
 ***
 
 For API documentation I used Swagger-UI. Not much to read but I sure that someone might need it :)
-###Swagger-UI / Springfox
+### Swagger-UI / Springfox
 
 
 ![Swagger-UI](pictures/Swagger-UI.png)
