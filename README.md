@@ -51,7 +51,8 @@ There are several features:
 4. Open `server` directory and configure your database in `application.yml`
 <br>
 Standard configuration is prepared for `MySQL` and will look like this:
-```YAML
+
+```yaml
 spring:
   datasource:
     username: "user"
@@ -63,6 +64,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
 ```
+
 Database
 * Create user and set username & password
 * Create database schema ex. "websocket-chat"
