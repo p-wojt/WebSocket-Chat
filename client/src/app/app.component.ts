@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import * as SockJS from "sockjs-client";
 import {CompatClient, Stomp} from "@stomp/stompjs";
 import {OutputMessage} from "./model/OutputMessage";
@@ -7,6 +7,7 @@ import {ActiveUser} from "./model/ActiveUser";
 import {ActiveUserService} from "./service/active-user.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {restrictedNames} from "./validators/restricted-names";
+import {IpMessage} from "./model/IpMessage";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
   private REFRESH_USER_LIST = 15000;
   private stompClient: CompatClient | undefined;
   private ipAddress: string | undefined;
-  private refreshInterval: any;
+  private refreshInterval: number | undefined;
 
   connectForm: FormGroup | undefined;
   allowedColors: string[] = ['Black', 'Aqua', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange', 'Pink'];
@@ -47,14 +48,14 @@ export class AppComponent implements OnInit {
       ])
     })
 
-    let _this = this;
-    window.onbeforeunload = function () {
-      _this.disconnect();
+    window.onbeforeunload = () => {
+      this.disconnect();
     }
   }
 
+
   async connect() {
-    this.nickname = this.connectForm?.value.nickname;
+    this.nickname= this.connectForm?.value.nickname;
     if (this.nickname.length >= 3 && this.nickname.match("^[a-zA-Z0-9]*$")) {
 
       await this.isTheSameNickname(this.nickname);
@@ -62,44 +63,43 @@ export class AppComponent implements OnInit {
         const socket = new SockJS('http://localhost:8080/chat');
         this.stompClient = Stomp.over(socket);
 
-        let _this = this;
-        this.stompClient.connect({}, async function () {
+        this.stompClient.connect({}, async () => {
 
-          await _this.saveConnectingUser({
-            nickname: _this.nickname,
-            color: _this.pickerFontColor
+          await this.saveConnectingUser({
+            nickname: this.nickname,
+            color: this.pickerFontColor
           });
 
-          await _this.getActiveUsers();
-          _this.setConnected(true);
+          await this.getActiveUsers();
+          this.setConnected(true);
 
-          _this.stompClient?.subscribe('/topic/messages', function (msg) {
-            _this.showMessage(JSON.parse(msg.body))
+          this.stompClient?.subscribe('/topic/messages',  (msg) => {
+            this.showMessage(JSON.parse(msg.body))
           });
 
-          _this.getIpAddress();
-          _this.broadcastMessage(_this.nickname + ' has joined to the channel!');
+          this.getIpAddress();
+          this.broadcastMessage(this.nickname + ' has joined to the channel!');
 
-          _this.refreshInterval = setInterval(() => {
-            _this.activeUserService.getAllActiveUsers().subscribe((response: Array<ActiveUser>) => {
-              _this.activeUsers = response
-              _this.online = response.length;
+          this.refreshInterval = setInterval(() => {
+            this.activeUserService.getAllActiveUsers().subscribe((response: Array<ActiveUser>) => {
+              this.activeUsers = response
+              this.online = response.length;
             });
-          }, _this.REFRESH_USER_LIST);
+          }, this.REFRESH_USER_LIST);
         })
       }
     }
   }
 
-  setConnected(connected: boolean) {
+  setConnected(connected: boolean){
     if (!connected) {
       this.messages = [];
     }
     this.connected = connected;
   }
 
-  disconnect() {
-    if (this.stompClient != undefined) {
+  disconnect(){
+    if (this.stompClient !== undefined) {
       this.broadcastMessage(this.nickname + ' has left the channel!');
       this.activeUserService.deleteUserByName(this.nickname);
       this.stompClient.disconnect();
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
   }
 
   sendMessage() {
-    if (this.allowSendMessages && this.message != '') {
+    if (this.allowSendMessages && this.message !== '') {
       this.allowSendMessages = false;
       this.stompClient?.send(
         '/app/chat',
@@ -124,7 +124,7 @@ export class AppComponent implements OnInit {
       this.message = '';
       this.timeToSend = 3;
 
-      let noSpamInterval = setInterval(() => {
+      const noSpamInterval = setInterval(() => {
         this.timeToSend! -= 1;
         if (this.timeToSend! <= 0) {
           this.allowSendMessages = true;
@@ -159,15 +159,15 @@ export class AppComponent implements OnInit {
   }
 
   private getIpAddress() {
-    this.messageService.getIpAddress().subscribe((result: any) => {
+    this.messageService.getIpAddress().subscribe((result: IpMessage) => {
       this.ipAddress = result.ip;
     })
   }
 
   private async getActiveUsers() {
     await this.activeUserService.getAllActiveUsers().toPromise().then(
-      (res: any) => {
-        this.activeUsers = res.map((res: any) => {
+      (res: ActiveUser[]) => {
+        this.activeUsers = res.map((res: ActiveUser) => {
           return {
             nickname: res.nickname,
             color: res.color
@@ -180,7 +180,7 @@ export class AppComponent implements OnInit {
 
   private async saveConnectingUser(user: ActiveUser) {
     await this.activeUserService.saveActiveUser(user).toPromise().then(
-      (res: any) => {
+      (res: ActiveUser) => {
         this.activeUsers.push(res);
       }
     )
@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
 
   private async isTheSameNickname(nickname: string){
     await this.activeUserService.isTheSameNickname(nickname).toPromise().then(
-      (res: any) => {
+      (res: boolean) => {
         this.theSameNickname = res;
       }
     )
