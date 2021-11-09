@@ -12,27 +12,28 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/app/activeusers")
 public class ActiveUserController {
 
     private final ActiveUserService service;
 
-    @PostMapping(path = "/app/activeusers/save", consumes="application/json")
+    @PostMapping(path = "/save", consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody ActiveUserReq activeUser){
         this.service.saveActiveUser(activeUser);
     }
 
-    @GetMapping(path = "/app/activeusers/getAll")
+    @GetMapping(path = "/getAll")
     public ResponseEntity<List<ActiveUserEntity>> getAllActiveUsers(){
         return ResponseEntity.ok(this.service.getAllActiveUsers());
     }
 
-    @GetMapping(path = "/app/activeusers/theSameNickname/{name}")
+    @GetMapping(path = "/theSameNickname/{name}")
     public boolean isTheSameNickname(@PathVariable("name") String name){
         return service.isTheSameNickname(name);
     }
 
-    @DeleteMapping(path = "/app/activeusers/deleteByNickname/{name}")
+    @DeleteMapping(path = "/deleteByNickname/{name}")
     public void deleteUserByNickname(@PathVariable("name") String name){
         this.service.deleteUserByNickname(name);
     }
