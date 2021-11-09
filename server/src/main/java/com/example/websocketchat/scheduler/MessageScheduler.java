@@ -2,11 +2,13 @@ package com.example.websocketchat.scheduler;
 
 import com.example.websocketchat.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
 @Component
+@EnableScheduling
 public class MessageScheduler {
 
     private final MessageService service;
