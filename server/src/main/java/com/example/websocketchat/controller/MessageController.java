@@ -3,7 +3,7 @@ package com.example.websocketchat.controller;
 import com.example.websocketchat.entity.MessageEntity;
 import com.example.websocketchat.model.Message;
 import com.example.websocketchat.model.OutputMessage;
-import com.example.websocketchat.service.MessageService;
+import com.example.websocketchat.service.impl.MessageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,7 +18,7 @@ import java.util.Calendar;
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final MessageService service;
+    private final MessageServiceImpl service;
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")

@@ -1,7 +1,7 @@
 package com.example.websocketchat.controller;
 
 import com.example.websocketchat.entity.ActiveUserEntity;
-import com.example.websocketchat.service.ActiveUserService;
+import com.example.websocketchat.service.impl.ActiveUserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -29,7 +29,7 @@ public class ActiveUserControllerTests {
     private MockMvc mvc;
 
     @MockBean
-    private ActiveUserService service;
+    private ActiveUserServiceImpl service;
 
     @Autowired
     private JacksonTester<List<ActiveUserEntity>> jsonActiveUserEntityList;

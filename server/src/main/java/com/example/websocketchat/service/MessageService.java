@@ -2,20 +2,11 @@ package com.example.websocketchat.service;
 
 import com.example.websocketchat.entity.MessageEntity;
 import com.example.websocketchat.repository.MessageRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class MessageService {
+import java.util.List;
 
-    private final MessageRepository repository;
-
-    public void save(final MessageEntity messageEntity){
-        this.repository.save(messageEntity);
-    }
-
-    public void deleteLastDayMessages(){
-        this.repository.deleteAll(this.repository.getLastDayMessages());
-    }
+public interface MessageService {
+    void save(MessageEntity messageEntity);
+    List<MessageEntity> getLastDayMessages();
+    void deleteLastDayMessages();
 }

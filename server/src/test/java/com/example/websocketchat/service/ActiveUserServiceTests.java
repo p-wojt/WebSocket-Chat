@@ -1,26 +1,26 @@
 package com.example.websocketchat.service;
 
-import com.example.websocketchat.dto.ActiveUserReq;
 import com.example.websocketchat.entity.ActiveUserEntity;
 import com.example.websocketchat.repository.ActiveUserRepository;
+import com.example.websocketchat.service.impl.ActiveUserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActiveUserServiceTests {
 
-    private ActiveUserService service;
+    private ActiveUserServiceImpl service;
     private ActiveUserRepository repository;
 
     @BeforeEach
     public void setup(){
         this.repository = Mockito.mock(ActiveUserRepository.class);
-        this.service = new ActiveUserService(repository);
+        this.service = new ActiveUserServiceImpl(repository);
     }
 
     @Test
@@ -38,9 +38,12 @@ public class ActiveUserServiceTests {
 
     @Test
     public void deleteUserByNickname_allParamsOk_userDeletedCorrectly(){
-        //given/when
+        //given
+        final ActiveUserEntity activeUserEntity = new ActiveUserEntity(1L,"Patryk", "Blue");
+        Mockito.when(this.repository.findByNickname("Patryk")).thenReturn(Optional.of(activeUserEntity));
+        //when
         this.service.deleteUserByNickname("Patryk");
         //then
-        Mockito.verify(repository).deleteUserByNickname("Patryk");
+        Mockito.verify(repository).delete(activeUserEntity);
     }
 }

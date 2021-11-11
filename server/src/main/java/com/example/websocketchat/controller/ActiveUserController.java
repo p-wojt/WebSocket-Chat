@@ -2,7 +2,7 @@ package com.example.websocketchat.controller;
 
 import com.example.websocketchat.dto.ActiveUserReq;
 import com.example.websocketchat.entity.ActiveUserEntity;
-import com.example.websocketchat.service.ActiveUserService;
+import com.example.websocketchat.service.impl.ActiveUserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/app/activeusers")
 public class ActiveUserController {
 
-    private final ActiveUserService service;
+    private final ActiveUserServiceImpl service;
 
     @PostMapping(path = "/save", consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
