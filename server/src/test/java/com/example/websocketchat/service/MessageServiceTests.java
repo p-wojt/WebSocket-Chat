@@ -2,6 +2,7 @@ package com.example.websocketchat.service;
 
 import com.example.websocketchat.entity.MessageEntity;
 import com.example.websocketchat.repository.MessageRepository;
+import com.example.websocketchat.service.impl.MessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,13 +11,13 @@ import java.sql.Date;
 
 class MessageServiceTests {
 
-    private MessageService service;
+    private MessageServiceImpl service;
     private MessageRepository repository;
 
     @BeforeEach
     public void setup(){
         this.repository = Mockito.mock(MessageRepository.class);
-        this.service = new MessageService(repository);
+        this.service = new MessageServiceImpl(repository);
     }
 
     @Test
